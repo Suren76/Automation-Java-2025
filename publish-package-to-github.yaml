@@ -18,3 +18,4 @@ jobs:
         run: mvn --batch-mode deploy -X
         env:
           GITHUB_TOKEN: ${{ secret_test.TEST_SECRET_KEY }}
+#          GITHUB_TOKEN: ${{ sc }}
