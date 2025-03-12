@@ -15,7 +15,7 @@ jobs:
           java-version: '11'
           distribution: 'temurin'
       - name: Publish package
-        run: mvn --batch-mode deploy -X
+        run: mvn --batch-mode deploy
         env:
           GITHUB_TOKEN: ${{ secret_test.TEST_SECRET_KEY }}
 #          GITHUB_TOKEN: ${{ sc }}

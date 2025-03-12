@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.learn.automation</groupId>
-    <artifactId>Automation</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>automation</artifactId>
+    <version>0.0.4-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -50,9 +50,7 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/Suren76/Automation-Java-2025</url>
+            <url>https://maven.pkg.github.com/Suren76/automation-java-2025</url>
         </repository>
     </distributionManagement>
-
-
 </project>
