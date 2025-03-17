@@ -4,7 +4,7 @@
 3. Հետո մտնում եք մի լինքով, ու սելեկտոր րք գրում, որը կընտրի միայն"Add to Cart" button-ը։
 ### solution
     1. a:has(input[type='checkbox'])
-    2. *[id*='brands'] a:has(input[type='checkbox'])
+    2. *[id*='brands'] ul:has(ul) a:has(input[type='checkbox'])
     3. *[id='add-to-cart-button']
 
 ----------------------------------------------------------------------------
