@@ -1,9 +1,7 @@
 package homework3AutomationTestWithJunit5;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import BaseTestComponents.BaseTestWithDriverInitClose;
+import org.junit.jupiter.api.*;
 import org.learn.automation.homework2SimpleAutomation.com.sixPm.Page;
 import org.learn.automation.homework2SimpleAutomation.com.sixPm.ProductCard;
 import org.learn.automation.homework2SimpleAutomation.com.sixPm.ProductDetailsOnPage;
@@ -16,19 +14,8 @@ import java.util.List;
 
 import static org.learn.automation.homework2SimpleAutomation.com.sixPm.Page.*;
 
-public class TestAddRandomItemToCartAndRemove {
-    WebDriver driver;
-
-    @BeforeEach
-    public void setup() {
-        driver = new ChromeDriver();
-    }
-
-    @AfterEach
-    public void clean() {
-        driver.quit();
-    }
-
+@Tag("cart")
+public class TestAddRandomItemToCartAndRemove extends BaseTestWithDriverInitClose {
     @Test
     public void testAddRandomItemToCartAndRemove() {
         Page.openHomePage(driver);
@@ -47,10 +34,7 @@ public class TestAddRandomItemToCartAndRemove {
         clickOnProduct(driver, firstProductToClick);
 
         ProductDetailsOnPage productDetailsOnPage = getProductDetailsBlock(driver);
-        System.out.println(productDetailsOnPage.productName);
-        System.out.println(productDetailsOnPage.price);
 
-        // checks task conditions
         Assertions.assertEquals(firstProductToClick.price, productDetailsOnPage.price, "failed price equality check");
         Assertions.assertEquals(firstProductToClick.productName, productDetailsOnPage.productName, "failed product name equality check");
 
@@ -64,6 +48,8 @@ public class TestAddRandomItemToCartAndRemove {
 
         By xpathToLoginButton = By.xpath("//a[contains(text(), 'Log In')]");
         WebElement loginFormLinkTag = driver.findElement(xpathToLoginButton);
+
+        // login link
         System.out.println(getUrlFromATag(loginFormLinkTag));
     }
 }

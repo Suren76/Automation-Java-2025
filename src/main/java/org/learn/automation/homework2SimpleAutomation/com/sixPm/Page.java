@@ -9,6 +9,8 @@ import org.openqa.selenium.interactions.Actions;
 import java.util.List;
 
 public class Page {
+    public static String xpathToFilterSection = "//div[contains(@id, 'Filter') or contains(@id, 'filter')]";
+
     public static String mainUrl = "https://www.6pm.com";
 
     public static void openHomePage(WebDriver driver) {
@@ -23,7 +25,8 @@ public class Page {
 
     public static WebElement getSubTabElement(WebElement tabElement, String subTabName, String subTabElementName) {
         By xpathToLuggageUnderAllBugs = By.xpath(
-                "//*[text()='%s']/following-sibling::ul//a[text()='%s']"
+                """
+//*[text()="%s"]/following-sibling::ul//a[text()='%s']"""
                         .formatted(subTabName, subTabElementName)
         );
         return tabElement.findElement(xpathToLuggageUnderAllBugs);
@@ -50,13 +53,31 @@ public class Page {
     }
 
     public static void expandFilter(WebDriver driver, String filterName) {
-        By xpathToFilterExpandButton = By.xpath("//div[contains(@id, 'filter')]//button[text()='%s']".formatted(filterName));
+        By xpathToFilterExpandButton = By.xpath(
+                xpathToFilterSection + "//button[text()='%s']".formatted(filterName));
         clickElement(driver.findElement(xpathToFilterExpandButton));
     }
 
-    public static void checkSubFilter(WebDriver driver, String filterName, String subFilter) {
-        By xpathToFilterExpandButton = By.xpath("//div[contains(@id, 'filter')]//button[text()='%s']//li//span[text()='%s']".formatted(filterName, subFilter));
-        clickElement(driver.findElement(xpathToFilterExpandButton));
+    public static void checkSubFilter(WebDriver driver, String filterName, String filterValue) {
+        By xpathToFilterExpandButton = By.xpath(
+                xpathToFilterSection + "//section[//button[text()='%s']]//li//span[text()='%s']".
+                        formatted(filterName, filterValue)
+        );
+        clickElement(driver, xpathToFilterExpandButton);
+    }
+
+    public static void removeFilter(WebDriver driver, String filterName) {
+        By xpathToSelectedFilterItemToRemove = By.xpath("//ul[contains(@id, 'SelectedFilter')]//*[text()='%s']"
+                .formatted(filterName));
+        clickElement(driver, xpathToSelectedFilterItemToRemove);
+    }
+
+    public static List<String> getAppliedFiltersList(WebDriver driver) {
+        By xpathToFiltersList = By.xpath("//ul[contains(@id, 'SelectedFilter')]//*[text()]");
+        return driver.findElements(xpathToFiltersList)
+                .stream()
+                .map(element -> element.getText())
+                .toList();
     }
 
     public static void clickElement(WebDriver driver, By xpathToElementToClick) {
@@ -65,13 +86,41 @@ public class Page {
 
     public static void clickElement(WebElement elementToClick) {
         elementToClick.click();
-        sleep(700);
+        sleep(1200);
     }
 
     public static boolean isCartEmpty(WebDriver driver) {
         By xpathToCartIcon = By.xpath("//a[@href='/cart']/span[1]");
         String cartCountStatus = driver.findElement(xpathToCartIcon).getText();
         return cartCountStatus.contains("empty");
+    }
+
+    public static boolean isCheckboxChecked(WebDriver driver, String filterName, String checkboxFilterValue) {
+        By xpathToFilterCheckbox = By.xpath(
+                xpathToFilterSection + "//section[//button[text()='%s']]//li//span[text()='%s']".formatted(
+                        filterName, checkboxFilterValue
+                )
+        );
+        return driver.findElement(xpathToFilterCheckbox).getDomAttribute("href") != null;
+    }
+
+    public static int getItemsCountFromFilterCheckbox(WebDriver driver, String filterName, String checkboxFilterValue) {
+        String xpathToMatchParenthesis = "/following-sibling::span[contains(text(), '(')] | //span[ contains(text(), ')')]";
+        By xpathToFilterCheckboxItemsCount = By.xpath(
+                xpathToFilterSection + "//section[//button[text()='%s']]//li//span[text()='%s']".formatted(
+                                filterName, checkboxFilterValue
+                        ) + xpathToMatchParenthesis
+        );
+        return Integer.parseInt(
+                driver.findElement(xpathToFilterCheckboxItemsCount).getText().replaceAll("[()]", "")
+        );
+    }
+
+    public static int getItemsCountFromResult(WebDriver driver) {
+        By xpathToSearchResultCount = By.xpath("//*[contains(text(), 'items found')]");
+        return Integer.parseInt(
+                driver.findElement(xpathToSearchResultCount).getText().replaceAll(" items found", "")
+        );
     }
 
     public static String getUrlFromATag(WebElement elementWithATag) {

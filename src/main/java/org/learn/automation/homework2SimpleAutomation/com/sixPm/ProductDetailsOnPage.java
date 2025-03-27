@@ -19,11 +19,15 @@ public class ProductDetailsOnPage extends BaseWebElementToDataClass{
 
     private String getPrice() {
         By xpathToPrice = By.xpath("//*[@id='productRecap']//*[@itemprop='price']");
-        return element.findElement(xpathToPrice).getText();
+        return element.findElement(xpathToPrice).getText()
+                .replaceAll("\n", "")
+                .replaceAll(" ", "");
     }
 
     private String getProductName() {
         By xpathToProductName = By.xpath("//span[@itemprop='brand']/following-sibling::span");
-        return element.findElement(xpathToProductName).getText();
+        return element.findElement(xpathToProductName).getText()
+                .replaceAll("\n", "")
+                .replaceAll(" ", "");
     }
 }

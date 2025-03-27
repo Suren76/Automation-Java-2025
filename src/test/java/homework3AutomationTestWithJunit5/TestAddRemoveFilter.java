@@ -1,30 +1,21 @@
 package homework3AutomationTestWithJunit5;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import BaseTestComponents.BaseTestWithDriverInitClose;
+import org.junit.jupiter.api.*;
 import org.learn.automation.homework2SimpleAutomation.com.sixPm.Page;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.util.List;
+
 import static org.learn.automation.homework2SimpleAutomation.com.sixPm.Page.*;
 import static org.learn.automation.homework2SimpleAutomation.com.sixPm.Page.clickElement;
 
-public class TestAddRemoveFilter {
-    WebDriver driver;
-
-    @BeforeEach
-    public void setup() {
-        driver = new ChromeDriver();
-    }
-
-    @AfterEach
-    public void clean() {
-        driver.quit();
-    }
-
+@Tag("filter")
+public class TestAddRemoveFilter  extends BaseTestWithDriverInitClose {
     @Test
+    @Tag("filter-TestAddRemoveFilter")
     public void testAddRemoveFilter() {
         Page.openHomePage(driver);
 
@@ -32,13 +23,32 @@ public class TestAddRemoveFilter {
 
         hoverElement(driver, bugsNavElement);
 
-        WebElement luggageUnderAllBugs = getSubTabElement(bugsNavElement, "Men's", "T-Shirt");
+        WebElement luggageUnderAllBugs = getSubTabElement(bugsNavElement, "Men's", "T-Shirts");
         clickElement(luggageUnderAllBugs);
 
         expandFilter(driver, "Color");
         checkSubFilter(driver, "Color", "Brown");
 
-        // թերատ եմ գրել
+        System.out.println();
+
+        int itemsCountFromCheckbox = getItemsCountFromFilterCheckbox(driver, "Color", "Brown");
+        int itemsCountFromPageSearchResult = getItemsCountFromResult(driver);
+
+        Assertions.assertEquals(itemsCountFromCheckbox, itemsCountFromPageSearchResult,
+                "Items count on checkbox didn't equal to filtered page result!");
+
+        removeFilter(driver, "Brown");
+        List<String> appliedFiltersList = getAppliedFiltersList(driver);
+        Assertions.assertFalse(
+                appliedFiltersList.contains("Brown"),
+                "Filters list contains a removed filter!"
+        );
+        Assertions.assertFalse(
+                isCheckboxChecked(driver, "Color", "Brown"),
+                "The checkbox should not be checked, but it is!"
+        );
+
+
     }
 
 }

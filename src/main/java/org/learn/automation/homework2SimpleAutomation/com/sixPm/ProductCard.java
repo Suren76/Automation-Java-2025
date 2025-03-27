@@ -20,12 +20,16 @@ public class ProductCard extends BaseWebElementToDataClass{
 
     private String getPrice() {
         By xpathToPrice = By.xpath(".//dd[4]");
-        return element.findElement(xpathToPrice).getText();
+        return element.findElement(xpathToPrice).getText()
+                .replaceAll("\n", "")
+                .replaceAll(" ", "");
     }
 
     private String getProductName() {
-        By xpathToProductName = By.xpath(".//dd[1]");
-        return element.findElement(xpathToProductName).getText();
+        By xpathToProductName = By.xpath(".//dd[2]");
+        return element.findElement(xpathToProductName).getText()
+                .replaceAll("\n", "")
+                .replaceAll(" ", "");
     }
 
     private String getProductLink() {
