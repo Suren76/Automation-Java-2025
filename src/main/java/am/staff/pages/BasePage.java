@@ -24,11 +24,11 @@ public abstract class BasePage extends BaseInteractor {
         openPage();
     }
 
-    public WebDriver getDriver() {
+    protected WebDriver getDriver() {
         return driver;
     }
 
-    public String getUrlWithDomain(String urlPath) {
+    protected static String getUrlWithDomain(String urlPath) {
         return baseUrl + urlPath;
     }
 
@@ -49,6 +49,7 @@ public abstract class BasePage extends BaseInteractor {
         getFooter().clickCompaniesMenuItem("View all companies");
         return new ResultPage();
     }
+
 
     public BasePage clickElement(WebElement element) {
         scrollTo(element);
@@ -74,6 +75,16 @@ public abstract class BasePage extends BaseInteractor {
                 );
     }
 
+    private BasePage openPageByUrl(String url) {
+        getDriver().get(url);
+        return this;
+    }
+
+    protected BasePage openPageByPath(String urlPath) {
+        return openPageByUrl(getUrlWithDomain(urlPath));
+    }
+
+    // todo: check if no effect on code remove
     protected abstract boolean isPageLoaded();
     protected abstract void openPage();
 }
