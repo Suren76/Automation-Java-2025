@@ -1,7 +1,7 @@
 package homework4StaffAm;
 
 import BaseTestComponents.BaseTestWithDriverInitClose;
-import am.staff.components.resultPageComponents.ResultItemBlock;
+import am.staff.components.resultPageComponents.CompanyItemBlock;
 import am.staff.pages.HomePage;
 import am.staff.pages.ResultPage;
 import org.junit.jupiter.api.Assertions;
@@ -17,22 +17,22 @@ public class TestStaffAmFilterResults extends BaseTestWithDriverInitClose {
         ResultPage resultPage = homePage.clickCompaniesField();
 
         resultPage.addFilter("Filter By Industry", "Sport");
-        List<ResultItemBlock> resultItemBlockListAtAllTab = resultPage.getResultItemBlockList();
+        List<CompanyItemBlock> companyItemBlockListAtAllTab = (List<CompanyItemBlock>) resultPage.getResultItemBlockList();
 
         resultPage.switchTabTo("Hiring");
-        List<ResultItemBlock> resultItemBlockListAtHiringTab = resultPage.getResultItemBlockList();
+        List<CompanyItemBlock> companyItemBlockListAtHiringTab = (List<CompanyItemBlock>) resultPage.getResultItemBlockList();
 
         resultPage.clickFooterMenuViewAllCompaniesItem();
 
         resultPage.addFilter("Filter By Industry", "Sport");
-        List<ResultItemBlock> resultItemBlockListAtAllTabSecond = resultPage.getResultItemBlockList();
+        List<CompanyItemBlock> companyItemBlockListAtAllTabSecond = (List<CompanyItemBlock>) resultPage.getResultItemBlockList();
 
         resultPage.switchTabTo("Hiring");
-        List<ResultItemBlock> resultItemBlockListAtHiringTabSecond = resultPage.getResultItemBlockList();
+        List<CompanyItemBlock> companyItemBlockListAtHiringTabSecond = (List<CompanyItemBlock>) resultPage.getResultItemBlockList();
 
-        Assertions.assertEquals(resultItemBlockListAtAllTab, resultItemBlockListAtAllTabSecond,
+        Assertions.assertEquals(companyItemBlockListAtAllTab, companyItemBlockListAtAllTabSecond,
                 "check results on `All` tab");
-        Assertions.assertEquals(resultItemBlockListAtHiringTab, resultItemBlockListAtHiringTabSecond,
+        Assertions.assertEquals(companyItemBlockListAtHiringTab, companyItemBlockListAtHiringTabSecond,
                 "check results on `Hiring` tab");
     }
 }
