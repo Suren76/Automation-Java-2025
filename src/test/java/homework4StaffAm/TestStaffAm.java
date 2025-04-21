@@ -1,7 +1,9 @@
 package homework4StaffAm;
 
 import BaseTestComponents.BaseTestWithDriverInitClose;
+import am.staff.components.resultPageComponents.CompanyItemBlock;
 import am.staff.components.resultPageComponents.ResultItemBlock;
+import am.staff.pages.CompanyPage;
 import am.staff.pages.HomePage;
 import am.staff.pages.ResultPage;
 import am.staff.pages.SingleCompanyPage;
@@ -22,8 +24,9 @@ public class TestStaffAm extends BaseTestWithDriverInitClose {
         homePage.openPage();
         homePage.chooseCareerOpportunity("Companies");
         homePage.selectDropdownOption("All industries", industryToSelect);
-        ResultPage resultPage = homePage.clickSearchButton();
+        homePage.clickSearchButton();
 
+        CompanyPage resultPage = new CompanyPage();
         String randomString = new RandomString().nextString();
         resultPage.search(randomString);
         Assertions.assertTrue(resultPage.getResultItemBlockList().isEmpty(),
@@ -31,16 +34,16 @@ public class TestStaffAm extends BaseTestWithDriverInitClose {
 
         String textToSearch = "ser";
         resultPage.search(textToSearch);
-        List<ResultItemBlock> resultItemList = resultPage.getResultItemBlockList();
-        resultItemList.forEach(resultItemBlock -> {
+        List<? extends ResultItemBlock> resultItemList = resultPage.getResultItemBlockList();
+        resultItemList.forEach(companyItemBlock -> {
             Assertions.assertTrue(
-                    resultItemBlock.getTitle().toLowerCase().contains(textToSearch),
-                    "invalid name assertion, [%s], [%s]".formatted(resultItemBlock.getTitle(), textToSearch));
+                    companyItemBlock.getTitle().toLowerCase().contains(textToSearch),
+                    "invalid name assertion, [%s], [%s]".formatted(companyItemBlock.getTitle(), textToSearch));
         });
 
         // get random item
         // may need refactoring
-        ResultItemBlock randomItemToOpen = resultItemList.get(new Random().nextInt(0, resultItemList.size()));
+        CompanyItemBlock randomItemToOpen = (CompanyItemBlock) resultItemList.get(new Random().nextInt(0, resultItemList.size()));
 
         SingleCompanyPage randomItemCompanyPage = resultPage.openCompanyPage(randomItemToOpen);
 

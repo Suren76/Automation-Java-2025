@@ -1,39 +1,60 @@
 package am.staff.components.resultPageComponents;
 
-import am.staff.components.base.BaseComponent;
+import am.staff.components.base.SingleLocatorComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.List;
 
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
-public class FiltersBlock extends BaseComponent {
+public class FiltersBlock extends SingleLocatorComponent {
     private static String templateXpathToFilterBlock =
-            "//*[.//*[text()='Filter']]/following-sibling::*[.//*[contains(text(), 'by') or contains(text(), 'By')]" +
-                    "[text()='%s']]";
-    private static String templateXpathToFilterBlockCheckedItem = templateXpathToFilterBlock + "/*[.//*[text()='%s']]//img";
+            "//*[.//*[text()='Filter']] /following-sibling::*[ .//*[text()]/following-sibling::div[.//span[text()]] ] [.//*[text()=\"%s\"]]";
+    private static String templateXpathToFilterBlockCheckedItem = templateXpathToFilterBlock + "/*[.//*[text()=\"%s\"]]//img";
 
     // find inside filter block root as a child
-    private static String templateXpathToFilterBlockCheckboxItem = ".//*[text()='%s']";
+    private static String templateXpathToFilterBlockCheckboxItem = templateXpathToFilterBlock + "//*[text()=\"%s\"]";
+    // find inside filter option as a child
+    private static String xpathToItemsCountNearFilterOption = templateXpathToFilterBlockCheckboxItem + "//*[text()=')' and text()='(']";
 
     private static By xpathToFilterBlockExpandButton = By.xpath(".//*[text()='View more']");
-    private static By xpathToFilterBlockClearFiltersButton = By.xpath("//*[text()='Clear filters']");
+    private final static String xpathToFilterBlockClearFiltersButton = "//*[text()='Clear filters']";
 
+    @FindBy(xpath = xpathToFilterBlockClearFiltersButton)
+    private WebElement filterBlockClearFilterButton;
 
     public FiltersBlock(WebElement element) {
         super(element);
     }
 
     public void addFilter(String filterName, String filterOption) {
+        if (isFilterChecked(filterName, filterOption)) return;
+        clickFilterCheckbox(filterName, filterOption);
+        waitClearFilterToBeLoaded();
+    }
+
+    public void removeFilter(String filterName, String filterOption) {
+        var e = find(By.xpath(xpathToFilterBlockClearFiltersButton));
+        clickFilterCheckbox(filterName, filterOption);
+//        getMiddleWait().waitElementToNotBe(e);
+    }
+
+    public int getFilterOptionItemsCount(String filterName, String filterOption) {
+        By xpathToFilterOptionItemsCount = By.xpath(xpathToItemsCountNearFilterOption.formatted(filterName, filterOption));
+        return Integer.parseInt(
+                find(xpathToFilterOptionItemsCount)
+                        .getText().replaceAll("[()]", "")
+        );
+    }
+
+    private void clickFilterCheckbox(String filterName, String filterOption) {
         By xpathToFilterBlock = By.xpath(templateXpathToFilterBlock.formatted(filterName));
-        By xpathToFilterBlockItem = By.xpath(templateXpathToFilterBlockCheckboxItem.formatted(filterOption));
+        By xpathToFilterBlockItem = By.xpath(templateXpathToFilterBlockCheckboxItem.formatted(filterName, filterOption));
 
         clickViewMoreButtonIfExists(xpathToFilterBlock);
-        // todo: check if not needed remove
-//        if (isFilterChecked(filterName, filterOption)) return;
         clickElement(xpathToFilterBlockItem);
-        waitClearFilterToBeLoaded();
     }
 
     private void clickViewMoreButtonIfExists(By xpathToFilterBlock) {
@@ -49,6 +70,6 @@ public class FiltersBlock extends BaseComponent {
     }
 
     private void waitClearFilterToBeLoaded() {
-        getMiddleWait().waitElementToBeClickable(xpathToFilterBlockClearFiltersButton);
+        getMiddleWait().waitElementToBeClickable(filterBlockClearFilterButton);
     }
 }

@@ -20,15 +20,11 @@ public abstract class BasePage extends BaseInteractor {
     protected static String domain = "staff.am";
     protected static String baseUrl = "https://" + domain;
 
-    public BasePage() {
-        openPage();
-    }
-
-    public WebDriver getDriver() {
+    protected WebDriver getDriver() {
         return driver;
     }
 
-    public String getUrlWithDomain(String urlPath) {
+    protected static String getUrlWithDomain(String urlPath) {
         return baseUrl + urlPath;
     }
 
@@ -40,15 +36,16 @@ public abstract class BasePage extends BaseInteractor {
         return new Footer(find(By.xpath("//html")));
     }
 
-    public ResultPage clickCompaniesField() {
+    public CompanyPage clickCompaniesField() {
         getHeader().clickCompaniesField();
-        return new ResultPage();
+        return new CompanyPage();
     }
 
-    public ResultPage clickFooterMenuViewAllCompaniesItem() {
+    public CompanyPage clickFooterMenuViewAllCompaniesItem() {
         getFooter().clickCompaniesMenuItem("View all companies");
-        return new ResultPage();
+        return new CompanyPage();
     }
+
 
     public BasePage clickElement(WebElement element) {
         scrollTo(element);
@@ -74,6 +71,16 @@ public abstract class BasePage extends BaseInteractor {
                 );
     }
 
+    private BasePage openPageByUrl(String url) {
+        getDriver().get(url);
+        return this;
+    }
+
+    protected BasePage openPageByPath(String urlPath) {
+        return openPageByUrl(getUrlWithDomain(urlPath));
+    }
+
+    // todo: check if no effect on code remove
     protected abstract boolean isPageLoaded();
     protected abstract void openPage();
 }

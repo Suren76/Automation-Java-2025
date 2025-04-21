@@ -8,6 +8,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 
 public class WaitUtility {
@@ -63,5 +66,9 @@ public class WaitUtility {
 
     public WebElement waitElementPresence(By selector) {
         return getWait().until(ExpectedConditions.presenceOfElementLocated(selector));
+    }
+
+    public boolean waitElementToNotBe(WebElement element) {
+        return getWait().until(ExpectedConditions.invisibilityOf(element));
     }
 }
