@@ -21,7 +21,9 @@ public abstract class BaseComponent extends BaseInteractor {
     }
 
     public WebElement find(By xpathToElement) {
-        return getMiddleWait().waitElementPresence(xpathToElement);
+        // todo: add-method
+        //   check is needed wait for child element
+        return getElement().findElement(xpathToElement);
     }
 
     public void clickElement(WebElement element) {

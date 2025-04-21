@@ -12,6 +12,8 @@ import static am.staff.helper.WebDriverHelper.getDriver;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
 public class BaseInteractor {
+    protected static Actions actions = new Actions(getDriver());
+
     public BaseInteractor() {
         PageFactory.initElements(getDriver(), this);
     }

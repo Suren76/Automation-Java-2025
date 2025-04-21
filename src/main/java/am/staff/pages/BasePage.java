@@ -46,8 +46,12 @@ public abstract class BasePage extends BaseInteractor {
         return new CompanyPage();
     }
 
+    public CandidateRegisterPage clickCandidateRegisterPage() {
+        getHeader().clickCandidateDropdownOption("Register");
+    }
 
     public BasePage clickElement(WebElement element) {
+
         scrollTo(element);
         getMiddleWait()
                 .waitElementToBeClickable(element)
