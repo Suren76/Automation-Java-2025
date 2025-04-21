@@ -112,6 +112,8 @@ public abstract class ResultPage<T extends ResultItemBlock> extends BasePage {
         return true;
     }
 
+    // todo: refactoring
+    //  split to atomic methods
     private boolean waitResultItemsToBeLoadedAfter(List<T> listOfResultItemsToBeChanged, int timeoutSeconds) {
         int timeoutForWaitInMilis = timeoutSeconds * 1000;
 
@@ -155,7 +157,16 @@ public abstract class ResultPage<T extends ResultItemBlock> extends BasePage {
         if (listOfElementsOnPage.size() < 50) return listOfElementsOnPage.size();
 
         // find and if exception return items count else calculate them
-        int lastPaginationElementNumber = find(xpathToPaginationElements)
+        int lastPaginationElementNumber = getLastPaginationElementNumber();
+        By xpathToPaginationLastElement = By.xpath(selectorToPaginationElements + "[text()='%s']".formatted(lastPaginationElementNumber));
+        // click last element from pagination
+        clickElement(xpathToPaginationLastElement);
+        // calculate full items count and add count fo items from last page
+        return (lastPaginationElementNumber - 1) * 50 +  getResultItemBlockList().size();
+    }
+
+    private int getLastPaginationElementNumber() {
+        return find(xpathToPaginationElements)
                 .findElements(xpathToPaginationElements).stream()
                 .map(element -> {
                     try {
@@ -166,12 +177,6 @@ public abstract class ResultPage<T extends ResultItemBlock> extends BasePage {
                 })
                 .max(Integer::compareTo)
                 .get();
-        By xpathToPaginationLastElement = By.xpath(selectorToPaginationElements + "[text()='%s']".formatted(lastPaginationElementNumber));
-        // click last element from pagination
-        clickElement(xpathToPaginationLastElement);
-        // calculate full items count and add count fo items from last page
-        var iii = getResultItemBlockList();
-        return (lastPaginationElementNumber - 1) * 50 + iii.size();
     }
 
     public JobsPage openJobs() {

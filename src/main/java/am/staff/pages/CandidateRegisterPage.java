@@ -4,6 +4,7 @@ import am.staff.components.base.DropdownComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 
+import static am.staff.utils.Logger.debug;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 import static am.staff.utils.WaitUtility.getShortWait;
 
@@ -38,7 +39,10 @@ public class CandidateRegisterPage extends BasePage{
         openPageByPath("/register");
     }
 
+    // todo: refactoring
+    //   move to `BaseInteractor` if needed in future
     protected void sendTextToInputField(By xpathToInputField, String text) {
+        debug("send text{%s} to element[%s]".formatted(text, xpathToInputField));
         find(xpathToInputField).sendKeys(text);
     }
 

@@ -12,6 +12,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
+import static am.staff.utils.Logger.debug;
+import static am.staff.utils.Logger.info;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
 public abstract class BasePage extends BaseInteractor {
@@ -37,22 +39,25 @@ public abstract class BasePage extends BaseInteractor {
     }
 
     public CompanyPage clickCompaniesField() {
+        info("open `CompanyPage` page");
         getHeader().clickCompaniesField();
         return new CompanyPage();
     }
 
     public CompanyPage clickFooterMenuViewAllCompaniesItem() {
+        info("open `CompanyPage` page");
         getFooter().clickCompaniesMenuItem("View all companies");
         return new CompanyPage();
     }
 
     public CandidateRegisterPage clickCandidateRegisterPage() {
+        info("open `CandidateRegisterPage` page");
         getHeader().clickCandidateDropdownOption("Register");
         return new CandidateRegisterPage();
     }
 
     public BasePage clickElement(WebElement element) {
-
+        debug("click element[%s]".formatted(element));
         scrollTo(element);
         getMiddleWait()
                 .waitElementToBeClickable(element)
@@ -66,10 +71,12 @@ public abstract class BasePage extends BaseInteractor {
     }
 
     public WebElement find(By xpathToElement) {
+        debug("find element[%s]".formatted(xpathToElement));
         return getDriver().findElement(xpathToElement);
     }
 
     protected void waitPageToBeLoaded() {
+        debug("wait page to be loaded: %s".formatted(getClass().getSimpleName()));
         new WebDriverWait(getDriver(), Duration.ofSeconds(5))
                 .until( (ExpectedCondition<Boolean>) driver  ->
                         isPageLoaded()
