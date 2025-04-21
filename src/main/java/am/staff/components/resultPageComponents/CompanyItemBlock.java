@@ -75,12 +75,13 @@ public class CompanyItemBlock extends ResultItemBlock {
         return companyPageLink.getDomAttribute("href");
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
         CompanyItemBlock that = (CompanyItemBlock) o;
-        return Objects.equals(getTitle(), that.getTitle()) &&
-                Objects.equals(getPageViews(), that.getPageViews()) &&
+        return Objects.equals(getPageViews(), that.getPageViews()) &&
                 Objects.equals(getFollowers(), that.getFollowers()) &&
                 Objects.equals(getActiveJobs(), that.getActiveJobs()) &&
                 Objects.equals(getJobHistory(), that.getJobHistory());
@@ -88,6 +89,6 @@ public class CompanyItemBlock extends ResultItemBlock {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTitle(), getPageViews(), getFollowers(), getActiveJobs(), getJobHistory());
+        return Objects.hash(super.hashCode(), getPageViews(), getFollowers(), getActiveJobs(), getJobHistory());
     }
 }

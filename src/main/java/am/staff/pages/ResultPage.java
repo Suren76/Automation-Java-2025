@@ -1,26 +1,31 @@
 package am.staff.pages;
 
-import am.staff.components.base.WebElementToDataClass;
 import am.staff.components.resultPageComponents.*;
 import am.staff.utils.Logger;
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 
+import java.io.*;
+
+
+import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
+public abstract class ResultPage<T extends ResultItemBlock> extends BasePage {
 
-public class ResultPage extends BasePage {
     private static final int MAX_ITEMS_COUNT_ON_PAGE = 50;
 
     protected static final String URL_PATH_JOBS = "/jobs";
     protected static final String URL_PATH_TRAINING = "/trainings";
     protected static final String URL_PATH_COMPANIES = "/companies";
 
-    private FiltersBlock filtersBlock = new FiltersBlock(getDriver().findElement(By.xpath("//html")));
+    private FiltersBlock filtersBlock = getFiltersBlock();
 
     private static String templateXpathToTabButton = "//*[.//*[text()='All']]/following-sibling::*[.//*[text()='%s']]";
 
@@ -32,6 +37,13 @@ public class ResultPage extends BasePage {
     private static String selectorToPaginationElements = "//li[@class='next']/preceding-sibling::li/a[text()]";
     private static By xpathToPaginationElements = By.xpath(selectorToPaginationElements);
 
+    public ResultPage() {
+        super();
+    }
+
+    protected FiltersBlock getFiltersBlock() {
+        return new FiltersBlock(getDriver().findElement(By.xpath("//html")));
+    }
 
     private WebElement getSearchField() {
         return getDriver().findElement(xpathToSearchField);
@@ -49,24 +61,12 @@ public class ResultPage extends BasePage {
         getSearchField().clear();
     }
 
-    public List<? extends ResultItemBlock> getResultItemBlockList() {
-        // todo: research
-        //  if i scroll intoViewOfElement it needs to wait
-        //  if i pass element without scroll and wait it works faster but may throw `StaleElementReferenceException`
+    public List<T> getResultItemBlockList() {
+//        getMiddleWait().waitElementPresence(xpathToResultItems);
+        sleep(2000);
         return getDriver().findElements(xpathToResultItems).stream()
                 .map(element -> {
-                    scrollTo(element);
-                    // todo: implement with `getResultItemsType()` or with `Enum`
-                    return switch (getResultPageType()) {
-                        case "companies" -> new CompanyItemBlock(
-                                getMiddleWait().waitElementToBeVisible(element)
-                        );
-                        case "jobs" -> new JobItemBlock(
-                                getMiddleWait().waitElementToBeVisible(element)
-                        );
-                        // todo: implement create `ResultItemNotImplementedException` exception
-                        default -> throw new RuntimeException("items type is not implemented");
-                    };
+                    return getResultItemBlockBy(element);
                 })
                 .collect(Collectors.toList());
     }
@@ -80,40 +80,30 @@ public class ResultPage extends BasePage {
         waitResultItemsToBeLoadedWrapper(() -> clickElement(xpathToTabButton));
     }
 
-    public ResultPage addFilter(String filterName, String filterOption) {
+    public ResultPage<T> addFilter(String filterName, String filterOption) {
         waitResultItemsToBeLoadedWrapper(() ->
-                filtersBlock.addFilter(filterName, filterOption)
+                getFiltersBlock().addFilter(filterName, filterOption)
         );
         return this;
     }
 
-    public ResultPage removeFilter(String filterName, String filterOption) {
+    public ResultPage<T> removeFilter(String filterName, String filterOption) {
         waitResultItemsToBeLoadedWrapper(() ->
-                filtersBlock.removeFilter(filterName, filterOption)
+                getFiltersBlock().removeFilter(filterName, filterOption)
         );
         return this;
     }
 
     public int getFilterOptionItemsCount(String filterName, String filterOption) {
-        return filtersBlock.getFilterOptionItemsCount(filterName, filterOption);
+        return getFiltersBlock().getFilterOptionItemsCount(filterName, filterOption);
     }
 
     @Override
-    public ResultPage clickFooterMenuViewAllCompaniesItem() {
+    public CompanyPage clickFooterMenuViewAllCompaniesItem() {
         waitResultItemsToBeLoadedWrapper(() ->
                 super.clickFooterMenuViewAllCompaniesItem()
         );
-        return this;
-    }
-
-    @Override
-    protected boolean isPageLoaded() {
-        return isItemsLoaded();
-    }
-
-    @Override
-    protected void openPage() {
-        waitPageToBeLoaded();
+        return new CompanyPage();
     }
 
     private boolean isItemsLoaded() {
@@ -122,15 +112,7 @@ public class ResultPage extends BasePage {
         return true;
     }
 
-    private boolean waitResultItemsToBeLoadedAfter(List<? extends ResultItemBlock> listOfResultItemsToBeChanged, int timeoutSeconds) {
-        // TODO: implement
-        //  add wait to one item root
-
-        // TODO: refactoring
-        //  do some researches to identify is there need to implement one by one check
-        //  implement one by one if needed
-
-
+    private boolean waitResultItemsToBeLoadedAfter(List<T> listOfResultItemsToBeChanged, int timeoutSeconds) {
         int timeoutForWaitInMilis = timeoutSeconds * 1000;
 
         while ((timeoutForWaitInMilis -= 500) > 0) {
@@ -139,16 +121,18 @@ public class ResultPage extends BasePage {
             try {
                 currentListOfResultItems = getResultItemBlockList();
             } catch (StaleElementReferenceException e) {
-                Logger.error(e.toString());
                 sleep(500);
                 continue;
             }
 
-            if (
+            if (!(listOfResultItemsToBeChanged.getFirst().getClass()).equals(
+                    currentListOfResultItems.getFirst().getClass())
+            ) return true;
+            else if (
                     listOfResultItemsToBeChanged.size() != currentListOfResultItems.size() ||
-                    !new HashSet<>(listOfResultItemsToBeChanged).equals(
-                            new HashSet<>(currentListOfResultItems)
-                    )
+                            !new HashSet<>(listOfResultItemsToBeChanged).equals(
+                                    new HashSet<>(currentListOfResultItems)
+                            )
             ) return true;
 
             sleep(500);
@@ -156,18 +140,18 @@ public class ResultPage extends BasePage {
         return false;
     }
 
-    private boolean waitResultItemsToBeLoadedAfter(List<? extends ResultItemBlock> listOfElementsToBeChanged) {
+    private boolean waitResultItemsToBeLoadedAfter(List<T> listOfElementsToBeChanged) {
         return waitResultItemsToBeLoadedAfter(listOfElementsToBeChanged, 5);
     }
 
-    private void waitResultItemsToBeLoadedWrapper(Runnable action) {
-        List<? extends ResultItemBlock> itemsToCheckAfterFilterAdd = getResultItemBlockList();
-        action.run();
+    private void waitResultItemsToBeLoadedWrapper(Runnable actionToChangeItemsState) {
+        List<T> itemsToCheckAfterFilterAdd = getResultItemBlockList();
+        actionToChangeItemsState.run();
         waitResultItemsToBeLoadedAfter(itemsToCheckAfterFilterAdd);
     }
 
     public int getAllFoundedItemsCount() {
-        List<? extends ResultItemBlock> listOfElementsOnPage = getResultItemBlockList();
+        List<T> listOfElementsOnPage = getResultItemBlockList();
         if (listOfElementsOnPage.size() < 50) return listOfElementsOnPage.size();
 
         // find and if exception return items count else calculate them
@@ -179,41 +163,29 @@ public class ResultPage extends BasePage {
                     } catch (NumberFormatException e) {
                         return 0;
                     }
-                }).max(Integer::compareTo).get();
+                })
+                .max(Integer::compareTo)
+                .get();
+        By xpathToPaginationLastElement = By.xpath(selectorToPaginationElements + "[text()='%s']".formatted(lastPaginationElementNumber));
         // click last element from pagination
-        clickElement(By.xpath(selectorToPaginationElements + "[text()='%s']".formatted(lastPaginationElementNumber)));
+        clickElement(xpathToPaginationLastElement);
         // calculate full items count and add count fo items from last page
-        return (lastPaginationElementNumber - 1) * 50 + getResultItemBlockList().size();
+        var iii = getResultItemBlockList();
+        return (lastPaginationElementNumber - 1) * 50 + iii.size();
     }
 
-    public ResultPage openJobs() {
-        openPageByPath(URL_PATH_JOBS);
-        return new ResultPage();
+    public JobsPage openJobs() {
+        return new JobsPage();
     }
 
-    public ResultPage openTraining() {
-        openPageByPath(URL_PATH_TRAINING);
-        return new ResultPage();
+    public TrainingPage openTraining() {
+        return new TrainingPage();
     }
 
-    public ResultPage openCompanies() {
-        openPageByPath(URL_PATH_COMPANIES);
-        return new ResultPage();
+    public CompanyPage openCompanies() {
+        return new CompanyPage();
     }
 
-    private Class<? extends WebElementToDataClass> getResultItemsType() {
-        return Map.of(
-                "jobs", JobItemBlock.class,
-                "companies", CompanyItemBlock.class,
-                "trainings", TrainingItemBlock.class
-        ).get(getResultPageType());
-    }
-
-    private String getResultPageType() {
-        // todo: implement global get current page url
-        for(String resultItemType: List.of("trainings", "jobs", "companies")) {
-            if (getDriver().getCurrentUrl().contains(resultItemType)) return resultItemType;
-        }
-        throw  new RuntimeException("there are no implementation for current page type: %s".formatted(getDriver().getCurrentUrl()));
-    }
+    abstract protected T getResultItemBlockBy(WebElement elementToSerialize);
 }
+

@@ -4,12 +4,14 @@ import am.staff.components.base.WebElementToDataClass;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.util.Objects;
+
 public class JobItemBlock extends ResultItemBlock {
     private final static String xpathToReadMoreLink = ".//a[./*[text()='View more']]";
 
-    private final static String xpathToCompanyName = "./div/div[2]/div[2]//text()";
-    private final static String xpathToJobPostDate = "./div/div[2]/div[3]//text()";
-    private final static String xpathToJobLocation = "./div/div[2]/div[4]//text()";
+    private final static String xpathToCompanyName = "./div/div[2]/div[2]";
+    private final static String xpathToJobPostDate = "./div/div[2]/div[3]";
+    private final static String xpathToJobLocation = "./div/div[2]/div[4]";
 
     @FindBy(xpath = xpathToCompanyName)
     private WebElement companyNameElement;
@@ -63,5 +65,20 @@ public class JobItemBlock extends ResultItemBlock {
 
     public String getJobPageLink() {
         return jobPageLink.getDomAttribute("href");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        JobItemBlock that = (JobItemBlock) o;
+        return Objects.equals(getCompanyName(), that.getCompanyName()) &&
+                Objects.equals(getJobPostDate(), that.getJobPostDate()) &&
+                Objects.equals(getJobLocation(), that.getJobLocation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), getCompanyName(), getJobPostDate(), getJobLocation());
     }
 }

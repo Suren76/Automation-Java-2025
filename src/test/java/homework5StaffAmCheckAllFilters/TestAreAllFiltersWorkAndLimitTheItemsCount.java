@@ -1,6 +1,7 @@
 package homework5StaffAmCheckAllFilters;
 
 import BaseTestComponents.BaseTestWithDriverInitClose;
+import am.staff.pages.JobsPage;
 import am.staff.pages.ResultPage;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +25,8 @@ public class TestAreAllFiltersWorkAndLimitTheItemsCount extends BaseTestWithDriv
             String firstFilterName, String firstFilterOption,
             String secondFilterName, String secondFilterOption
     ) {
-        ResultPage resultPage = new ResultPage().openJobs();
+        JobsPage resultPage = new JobsPage();
+        resultPage.openPage();
 
         int itemsCountToBeAfterFilterAddedFirst = resultPage.getFilterOptionItemsCount(firstFilterName, firstFilterOption);
         resultPage.addFilter(firstFilterName, firstFilterOption);
@@ -46,7 +48,6 @@ public class TestAreAllFiltersWorkAndLimitTheItemsCount extends BaseTestWithDriv
 
         resultPage.removeFilter(firstFilterName, firstFilterOption);
         int itemsCountToBeAfterFilterAddedRemovedFilter = resultPage.getFilterOptionItemsCount(secondFilterName, secondFilterOption);
-        resultPage.addFilter(secondFilterName, secondFilterOption);
 
         int itemsCountCalculatedByPaginationRemovedFilter = resultPage.getAllFoundedItemsCount();
 

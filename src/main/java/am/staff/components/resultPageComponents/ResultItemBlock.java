@@ -6,6 +6,8 @@ import org.openqa.selenium.support.FindBy;
 
 import java.util.Objects;
 
+import static am.staff.utils.WaitUtility.getMiddleWait;
+
 public abstract class ResultItemBlock extends WebElementToDataClass {
     protected final static String xpathToTitle = ".//*[contains(@style, 'font-size: 16px')]";
 
@@ -28,18 +30,18 @@ public abstract class ResultItemBlock extends WebElementToDataClass {
     }
 
     private String getTitleText() {
-        return titleElement.getText();
+        return getMiddleWait().waitElementToBeVisible(titleElement).getText();
     }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ResultItemBlock that = (ResultItemBlock) o;
-        return Objects.equals(titleElement, that.titleElement) && Objects.equals(getTitle(), that.getTitle());
+        return Objects.equals(getTitle(), that.getTitle());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(titleElement, getTitle());
+        return Objects.hash(getTitle());
     }
 }

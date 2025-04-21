@@ -3,6 +3,7 @@ package homework4StaffAm;
 import BaseTestComponents.BaseTestWithDriverInitClose;
 import am.staff.components.resultPageComponents.CompanyItemBlock;
 import am.staff.components.resultPageComponents.ResultItemBlock;
+import am.staff.pages.CompanyPage;
 import am.staff.pages.HomePage;
 import am.staff.pages.ResultPage;
 import am.staff.pages.SingleCompanyPage;
@@ -23,8 +24,9 @@ public class TestStaffAm extends BaseTestWithDriverInitClose {
         homePage.openPage();
         homePage.chooseCareerOpportunity("Companies");
         homePage.selectDropdownOption("All industries", industryToSelect);
-        ResultPage resultPage = homePage.clickSearchButton();
+        homePage.clickSearchButton();
 
+        CompanyPage resultPage = new CompanyPage();
         String randomString = new RandomString().nextString();
         resultPage.search(randomString);
         Assertions.assertTrue(resultPage.getResultItemBlockList().isEmpty(),

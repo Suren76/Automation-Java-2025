@@ -68,7 +68,7 @@ public class WaitUtility {
         return getWait().until(ExpectedConditions.presenceOfElementLocated(selector));
     }
 
-    public boolean waitElementInvisibility(By selector) {
-        return getWait().until(ExpectedConditions.invisibilityOfElementLocated(selector));
+    public boolean waitElementToNotBe(WebElement element) {
+        return getWait().until(ExpectedConditions.invisibilityOf(element));
     }
 }

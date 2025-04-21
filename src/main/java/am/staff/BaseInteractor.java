@@ -49,6 +49,16 @@ public class BaseInteractor {
         );
     }
 
+    private void scrollIntoElementViewWithoutAnimation(WebElement element) {
+        getJavaScriptExecutor().executeScript(
+                "arguments[0].scrollIntoView({" +
+                            "behavior: 'instant', " +
+                            "block: 'center' " +
+                        "}); ",
+                element
+        );
+    }
+
     private int getScrollHeight(WebElement element) {
         Map<String, Number> jsRectData = ((Map<String, Number>) (
                 getJavaScriptExecutor()

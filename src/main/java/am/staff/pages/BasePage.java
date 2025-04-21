@@ -20,10 +20,6 @@ public abstract class BasePage extends BaseInteractor {
     protected static String domain = "staff.am";
     protected static String baseUrl = "https://" + domain;
 
-    public BasePage() {
-        openPage();
-    }
-
     protected WebDriver getDriver() {
         return driver;
     }
@@ -40,14 +36,14 @@ public abstract class BasePage extends BaseInteractor {
         return new Footer(find(By.xpath("//html")));
     }
 
-    public ResultPage clickCompaniesField() {
+    public CompanyPage clickCompaniesField() {
         getHeader().clickCompaniesField();
-        return new ResultPage();
+        return new CompanyPage();
     }
 
-    public ResultPage clickFooterMenuViewAllCompaniesItem() {
+    public CompanyPage clickFooterMenuViewAllCompaniesItem() {
         getFooter().clickCompaniesMenuItem("View all companies");
-        return new ResultPage();
+        return new CompanyPage();
     }
 
 

@@ -30,9 +30,8 @@ public class HomePage extends BasePage {
         getSearchBlock().selectDropdownOption(dropdownButtonPlaceholder, dropdownOption, new Actions(getDriver()));
     }
 
-    public ResultPage clickSearchButton() {
+    public void clickSearchButton() {
         getSearchBlock().clickSearchButton();
-        return new ResultPage();
     }
 
     @Override

@@ -2,22 +2,46 @@ package am.staff.helper;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.safari.SafariDriver;
 
 
 public class WebDriverHelper {
-    private static WebDriver driver;
+    private static ThreadLocal<WebDriver> driverThreadSafe;
 
-    public static void initDriver() {
-        ChromeOptions chromeOptions = new ChromeOptions().addArguments("--start-maximized");
-        driver = new ChromeDriver(chromeOptions);
+    private WebDriverHelper() {}
+
+    synchronized public static void initDriver(BROWSER browser) {
+        driverThreadSafe = new ThreadLocal<>();
+
+        switch (browser) {
+            case CHROME -> driverThreadSafe.set(new ChromeDriver());
+            case FIREFOX -> driverThreadSafe.set(new FirefoxDriver());
+            case SAFARI -> driverThreadSafe.set(new SafariDriver());
+        }
+
+        // maximize driver
+        getDriver().manage().window().maximize();
     }
 
     public static WebDriver getDriver() {
-        return driver;
+        return driverThreadSafe.get();
     }
 
     public static void closeDriver() {
-        driver.quit();
+        driverThreadSafe.get().quit();
+        driverThreadSafe.remove();
+    }
+
+    public enum BROWSER {
+        CHROME("chrome"),
+        FIREFOX("firefox"),
+        SAFARI("safari");
+
+        String value;
+
+        BROWSER(String value) {
+            this.value = value;
+        }
     }
 }
