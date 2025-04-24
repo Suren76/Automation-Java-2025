@@ -9,14 +9,18 @@ import org.openqa.selenium.support.PageFactory;
 import java.util.Map;
 
 import static am.staff.helper.WebDriverHelper.getDriver;
+import static am.staff.utils.Logger.debug;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
 public class BaseInteractor {
+    protected static Actions actions = new Actions(getDriver());
+
     public BaseInteractor() {
         PageFactory.initElements(getDriver(), this);
     }
 
     public void scrollTo(WebElement element) {
+        debug("scroll to %s".formatted(element.toString()));
         int calculatedSleepTimeBasedOnScrollHeight = (getScrollHeight(element) > 1000)? 12*100: 5*10;
         scrollIntoElementView(element);
         sleep(calculatedSleepTimeBasedOnScrollHeight);
@@ -27,6 +31,7 @@ public class BaseInteractor {
     }
 
     public void sleep(int sleepMillis)  {
+        debug("sleep: [%s]ms".formatted(sleepMillis));
         // todo: implement general sleep for elements
         try {
             Thread.sleep(sleepMillis);

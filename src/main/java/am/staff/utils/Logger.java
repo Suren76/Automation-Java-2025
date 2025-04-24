@@ -1,26 +1,32 @@
 package am.staff.utils;
 
+import org.slf4j.LoggerFactory;
+import org.slf4j.event.Level;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 public class Logger {
-    enum LogLevel {
-        DEBUG("DEBUG"),
-        INFO("INFO"),
-        WARNING("WARNING"),
-        ERROR("ERROR");
+    private static org.slf4j.Logger logger = LoggerFactory.getLogger(Logger.class);
+
+    enum LogLevel{
+        DEBUG(Level.DEBUG),
+        INFO(Level.INFO),
+        WARNING(Level.WARN),
+        ERROR(Level.ERROR);
 
         private static String RESET = "\u001B[0m";
+
         private static String RED = "\u001B[31m";
         private static String GREEN = "\u001B[32m";
         private static String YELLOW = "\u001B[33m";
         private static String BLUE = "\u001B[34m";
 
-        private String stringName;
+        private Level logLevel;
 
-        LogLevel(String stringName) {
-            this.stringName = stringName;
+        LogLevel(Level logLevel) {
+            this.logLevel = logLevel;
         }
 
         public String getLogLevelNameColored() {
@@ -62,7 +68,7 @@ public class Logger {
     }
 
     private static void log(LogLevel logType, String message) {
-        System.out.println(formatMessage(logType, message));
+        logger.atLevel(logType.logLevel).log(message);
     }
 
     private static String formatMessage(String dateAndTime, LogLevel logLevel, String message) {

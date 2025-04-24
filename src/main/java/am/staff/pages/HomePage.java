@@ -27,7 +27,7 @@ public class HomePage extends BasePage {
     }
 
     public void selectDropdownOption(String dropdownButtonPlaceholder, String dropdownOption) {
-        getSearchBlock().selectDropdownOption(dropdownButtonPlaceholder, dropdownOption, new Actions(getDriver()));
+        getSearchBlock().selectDropdownOption(dropdownButtonPlaceholder, dropdownOption);
     }
 
     public void clickSearchButton() {
