@@ -12,11 +12,18 @@ import static am.staff.helper.WebDriverHelper.getDriver;
 import static am.staff.utils.Logger.debug;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
-public class BaseInteractor {
+abstract public class BaseInteractor {
     protected static Actions actions = new Actions(getDriver());
 
     public BaseInteractor() {
         PageFactory.initElements(getDriver(), this);
+    }
+
+    abstract protected WebElement find(By xpathToElement);
+
+    protected void sendTextToInputField(By xpathToInputField, String text) {
+        debug("send text{%s} to element[%s]".formatted(text, xpathToInputField));
+        find(xpathToInputField).sendKeys(text);
     }
 
     public void scrollTo(WebElement element) {

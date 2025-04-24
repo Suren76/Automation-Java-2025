@@ -4,6 +4,7 @@ import am.staff.BaseInteractor;
 import am.staff.components.base.Footer;
 import am.staff.components.base.Header;
 import am.staff.helper.WebDriverHelper;
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -38,25 +39,28 @@ public abstract class BasePage extends BaseInteractor {
         return new Footer(find(By.xpath("//html")));
     }
 
+    @Step("open `CompanyPage` page")
     public CompanyPage clickCompaniesField() {
-        info("open `CompanyPage` page");
+        info("click `Companies` field in navbar");
         getHeader().clickCompaniesField();
         return new CompanyPage();
     }
 
+    @Step("open `CompanyPage` page")
     public CompanyPage clickFooterMenuViewAllCompaniesItem() {
-        info("open `CompanyPage` page");
+        info("click `View all companies` field in footer menu");
         getFooter().clickCompaniesMenuItem("View all companies");
         return new CompanyPage();
     }
 
+    @Step("open `CandidateRegisterPage` page")
     public CandidateRegisterPage clickCandidateRegisterPage() {
-        info("open `CandidateRegisterPage` page");
+        info("click `Candidate` dropdown `Register` option");
         getHeader().clickCandidateDropdownOption("Register");
         return new CandidateRegisterPage();
     }
 
-    public BasePage clickElement(WebElement element) {
+    protected BasePage clickElement(WebElement element) {
         debug("click element[%s]".formatted(element));
         scrollTo(element);
         getMiddleWait()
@@ -65,12 +69,13 @@ public abstract class BasePage extends BaseInteractor {
         return this;
     }
 
-    public BasePage clickElement(By xpathToElement) {
+    protected BasePage clickElement(By xpathToElement) {
         clickElement(find(xpathToElement));
         return this;
     }
 
-    public WebElement find(By xpathToElement) {
+    @Override
+    protected WebElement find(By xpathToElement) {
         debug("find element[%s]".formatted(xpathToElement));
         return getDriver().findElement(xpathToElement);
     }

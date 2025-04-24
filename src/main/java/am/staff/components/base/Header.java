@@ -60,25 +60,15 @@ public class Header extends BaseComponent {
         return isElementExists(xpathToNavbarCompaniesField);
     }
 
-    public void clickMenuHoverDropdownOption(String dropdownName, String dropdownOption) {
-        By xpathToNavbarDropdownItem = By.xpath(templateXpathToNavbarDropdownItem.formatted(dropdownName));
-        By xpathToHoverDropdownOption = By.xpath(".//a[.//text()='%s']".formatted(dropdownOption));
-
-        WebElement dropdownElement = find(xpathToNavbarDropdownItem);
-
-        actions
-                .moveToElement(dropdownElement)
-                .moveToElement(dropdownElement.findElement(xpathToHoverDropdownOption))
-                .perform();
-        ;
+    protected void clickMenuHoverDropdownOption(String dropdownName, String dropdownOption) {
+        new HoverDropdownComponent(dropdownName).clickMenuHoverDropdownOption(dropdownOption);
     }
 
     public void clickEmployerDropdownOption(String dropdownOption) {
-        clickMenuHoverDropdownOption("Employer", "");
+        clickMenuHoverDropdownOption("Employer", dropdownOption);
     }
+
     public void clickCandidateDropdownOption(String dropdownOption) {
-        clickMenuHoverDropdownOption("Candidate", "");
+        clickMenuHoverDropdownOption("Candidate", dropdownOption);
     }
-
-
 }

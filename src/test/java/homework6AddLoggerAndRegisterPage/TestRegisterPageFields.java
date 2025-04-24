@@ -39,6 +39,7 @@ public class TestRegisterPageFields extends BaseTestWithDriverInitClose {
 
         HomePage homePage = new HomePage();
         homePage.openPage();
+
         CandidateRegisterPage candidateRegisterPage = homePage.clickCandidateRegisterPage();
 
         candidateRegisterPage.sendTextToFirstNameField(firstName);

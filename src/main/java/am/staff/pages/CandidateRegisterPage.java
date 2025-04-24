@@ -4,24 +4,22 @@ import am.staff.components.base.DropdownComponent;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 
-import static am.staff.utils.Logger.debug;
-import static am.staff.utils.WaitUtility.getMiddleWait;
 import static am.staff.utils.WaitUtility.getShortWait;
 
-public class CandidateRegisterPage extends BasePage{
+public class CandidateRegisterPage extends BasePage {
     private static String templateXpathToInputField = "//div[following-sibling::div[./input]][text()='%s']/..//input";
 
     private static By xpathToFirstNameField = By.xpath(templateXpathToInputField.formatted("First name"));
     private static By xpathToLastNameField = By.xpath(templateXpathToInputField.formatted("Last name"));
 
-    private static DropdownComponent yearDropdown = new DropdownComponent(
-            By.xpath(DropdownComponent.tepmlateXpathToDropdownElement.formatted("Year")));
-    private static DropdownComponent monthDropdown = new DropdownComponent(
-            By.xpath(DropdownComponent.tepmlateXpathToDropdownElement.formatted("Month")));
-    private static DropdownComponent dayDropdown = new DropdownComponent(
-            By.xpath(DropdownComponent.tepmlateXpathToDropdownElement.formatted("Day")));
+    private static DropdownComponent yearDropdown = new DropdownComponent("Year");
+    private static DropdownComponent monthDropdown = new DropdownComponent("Month");
+    private static DropdownComponent dayDropdown = new DropdownComponent("Day");
 
     private static By xpathToEmailField = By.xpath(templateXpathToInputField.formatted("Email"));
+    private static By xpathToEmailFieldInvalidInputMessage = By.xpath(templateXpathToInputField +
+                    "/ancestor::*[./*[text()='Email']]//*[text()='The field must be a valid email address.']"
+    );
     private static By xpathToPasswordField = By.xpath(templateXpathToInputField.formatted("Password"));
     private static By xpathToConfirmPasswordField = By.xpath(templateXpathToInputField.formatted("Confirm password"));
 
@@ -37,13 +35,6 @@ public class CandidateRegisterPage extends BasePage{
     @Override
     protected void openPage() {
         openPageByPath("/register");
-    }
-
-    // todo: refactoring
-    //   move to `BaseInteractor` if needed in future
-    protected void sendTextToInputField(By xpathToInputField, String text) {
-        debug("send text{%s} to element[%s]".formatted(text, xpathToInputField));
-        find(xpathToInputField).sendKeys(text);
     }
 
     public void sendTextToFirstNameField(String text) {
@@ -84,5 +75,9 @@ public class CandidateRegisterPage extends BasePage{
             return false;
         }
         return true;
+    }
+
+    public boolean isInvalidEmailFieldMessageDisplayed() {
+        return getDriver().findElements(xpathToEmailFieldInvalidInputMessage).size() == 1;
     }
 }

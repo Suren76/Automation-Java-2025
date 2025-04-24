@@ -8,12 +8,18 @@ import org.openqa.selenium.interactions.Actions;
 import static am.staff.helper.WebDriverHelper.getDriver;
 
 public class DropdownComponent extends BaseComponent {
-    public static String tepmlateXpathToDropdownElement = "//*[contains(@class, 'select-selector')][.//*[contains(text(), '%s')]]";
+    private static String tepmlateXpathToDropdownElement = "//*[contains(@class, 'select-selector')][.//*[contains(text(), '%s')]]";
+
+    private static String xpathToScrollBarThumb = "./ancestor::div[parent::body]//*[contains(@class, 'scrollbar-thumb')]";
 
     protected static Actions actions = new Actions(getDriver());
 
-    public DropdownComponent(WebElement element) {
+    protected DropdownComponent(WebElement element) {
         super(element);
+    }
+
+    public DropdownComponent(String dropdownPlaceholderName) {
+        this(By.xpath(tepmlateXpathToDropdownElement.formatted(dropdownPlaceholderName)));
     }
 
     public DropdownComponent(By selectorToElement) {
@@ -32,6 +38,9 @@ public class DropdownComponent extends BaseComponent {
     private void scrollDropdownToOption(Actions actions, By xpathToDropdownOption) {
         while (getElement().findElements(xpathToDropdownOption).isEmpty()) {
             actions.sendKeys(Keys.DOWN).perform();
+
+            // to avoid infinity loop
+            if (getScrollBarThumbTopValue(xpathToDropdownOption) == 0.0) return;
         }
 
         // scroll +2 to make root visible
@@ -45,6 +54,13 @@ public class DropdownComponent extends BaseComponent {
 
     private void clickOnDropdownButton(Actions actions, WebElement dropdownElement) {
         actions.click(dropdownElement).perform();
+    }
+
+    private Double getScrollBarThumbTopValue(By optionLocator) {
+        return Double.parseDouble(
+                (String) getJavaScriptExecutor()
+                        .executeScript("$0.style.getPropertyValue('top').split('px')[0]")
+        );
     }
 }
 

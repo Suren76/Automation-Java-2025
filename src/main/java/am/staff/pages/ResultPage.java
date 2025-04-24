@@ -62,7 +62,7 @@ public abstract class ResultPage<T extends ResultItemBlock> extends BasePage {
     }
 
     public List<T> getResultItemBlockList() {
-//        getMiddleWait().waitElementPresence(xpathToResultItems);
+        // wait to elements be loaded: most stable solution
         sleep(2000);
         return getDriver().findElements(xpathToResultItems).stream()
                 .map(element -> {

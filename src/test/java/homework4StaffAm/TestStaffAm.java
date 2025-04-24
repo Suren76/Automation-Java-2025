@@ -5,7 +5,6 @@ import am.staff.components.resultPageComponents.CompanyItemBlock;
 import am.staff.components.resultPageComponents.ResultItemBlock;
 import am.staff.pages.CompanyPage;
 import am.staff.pages.HomePage;
-import am.staff.pages.ResultPage;
 import am.staff.pages.SingleCompanyPage;
 import net.bytebuddy.utility.RandomString;
 import org.junit.jupiter.api.Assertions;
