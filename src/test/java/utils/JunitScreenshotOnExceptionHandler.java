@@ -10,7 +10,7 @@ import java.io.ByteArrayInputStream;
 
 import static am.staff.helper.WebDriverHelper.getDriver;
 
-public class JunitScreenshotOnExtensionHandler implements TestExecutionExceptionHandler {
+public class JunitScreenshotOnExceptionHandler implements TestExecutionExceptionHandler {
     @Override
     public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
         if (getDriver()!=null) {
