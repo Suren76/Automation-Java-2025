@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import static am.staff.utils.Log.info;
+
 public class Header extends BaseComponent {
     private static String templateXpathToNavbarItem = "//nav//a[.//*[text()='%s']]";
     private static String templateXpathToNavbarDropdownItem = "//nav//*[./*[text()='%s']]/following-sibling::div[.//a]/..";

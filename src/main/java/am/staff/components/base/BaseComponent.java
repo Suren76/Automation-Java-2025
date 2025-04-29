@@ -5,7 +5,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
-import static am.staff.utils.Logger.debug;
+import static am.staff.utils.Log.debug;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
 

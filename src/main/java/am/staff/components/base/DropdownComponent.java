@@ -6,13 +6,13 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
 import static am.staff.helper.WebDriverHelper.getDriver;
+import static am.staff.utils.Log.info;
 
 public class DropdownComponent extends BaseComponent {
     private static String tepmlateXpathToDropdownElement = "//*[contains(@class, 'select-selector')][.//*[contains(text(), '%s')]]";
-
     private static String xpathToScrollBarThumb = "./ancestor::div[parent::body]//*[contains(@class, 'scrollbar-thumb')]";
 
-    protected static Actions actions = new Actions(getDriver());
+    private String dropdownName;
 
     protected DropdownComponent(WebElement element) {
         super(element);
@@ -20,6 +20,7 @@ public class DropdownComponent extends BaseComponent {
 
     public DropdownComponent(String dropdownPlaceholderName) {
         this(By.xpath(tepmlateXpathToDropdownElement.formatted(dropdownPlaceholderName)));
+        dropdownName = dropdownPlaceholderName;
     }
 
     public DropdownComponent(By selectorToElement) {
@@ -27,12 +28,19 @@ public class DropdownComponent extends BaseComponent {
     }
 
     public void selectDropdownOption(String dropdownOption) {
+        info("select '%s' from '%s'".formatted(dropdownOption, dropdownName));
         By xpathToDropdownOption = By.xpath("//*[contains(@class, 'select-item-option')][contains(text(), '%s')]/..".formatted(dropdownOption));
 
         clickOnDropdownButton(actions, getElement());
-        scrollDropdownToOption(actions, xpathToDropdownOption);
+        scrollDropdownToOption(actions, dropdownOption);
 
         clickElement(xpathToDropdownOption);
+    }
+
+    private void scrollDropdownToOption(Actions actions, String  dropdownOption) {
+        info("scroll dropdown options to '%s'".formatted(dropdownOption));
+        By xpathToDropdownOption = By.xpath("//*[contains(@class, 'select-item-option')][contains(text(), '%s')]/..".formatted(dropdownOption));
+        scrollDropdownToOption(actions, xpathToDropdownOption);
     }
 
     private void scrollDropdownToOption(Actions actions, By xpathToDropdownOption) {

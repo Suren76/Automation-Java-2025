@@ -1,7 +1,7 @@
 package am.staff.pages;
 
 import am.staff.components.resultPageComponents.*;
-import am.staff.utils.Logger;
+import am.staff.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 

@@ -12,7 +12,7 @@ import static am.staff.helper.WebDriverHelper.getDriver;
 
 public class JunitScreenshotOnExceptionHandler implements TestExecutionExceptionHandler {
     @Override
-    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) throws Throwable {
+    public void handleTestExecutionException(ExtensionContext context, Throwable throwable) {
         if (getDriver()!=null) {
             byte[] screenshot = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.BYTES);
             Allure.addAttachment("Screenshot on Failure", new ByteArrayInputStream(screenshot));

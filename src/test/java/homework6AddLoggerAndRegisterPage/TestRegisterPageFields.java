@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.net.URISyntaxException;
 
+import static am.staff.utils.Log.info;
+
 public class TestRegisterPageFields extends BaseTestWithDriverInitClose {
     Dotenv dotenv;
 
@@ -36,6 +38,8 @@ public class TestRegisterPageFields extends BaseTestWithDriverInitClose {
         String email = "parsyansuren@gamil.com";
 
         String password = dotenv.get("PASSWORD");
+
+        info("---- | 5555 | ----");
 
         HomePage homePage = new HomePage();
         homePage.openPage();

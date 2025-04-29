@@ -13,8 +13,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-import static am.staff.utils.Logger.debug;
-import static am.staff.utils.Logger.info;
+import static am.staff.utils.Log.debug;
+import static am.staff.utils.Log.info;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
 public abstract class BasePage extends BaseInteractor {

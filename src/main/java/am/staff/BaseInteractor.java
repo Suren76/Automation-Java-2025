@@ -4,12 +4,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.PageFactory;
 
 import java.util.Map;
 
 import static am.staff.helper.WebDriverHelper.getDriver;
-import static am.staff.utils.Logger.debug;
+import static am.staff.utils.Log.debug;
 import static am.staff.utils.WaitUtility.getMiddleWait;
 
 abstract public class BaseInteractor {
@@ -52,13 +53,16 @@ abstract public class BaseInteractor {
     }
 
     private void scrollIntoElementView(WebElement element) {
-        // todo: test js version and Actions
-        //  if Actions work correct remove `JavascriptExecutor`
-//        new Actions(getDriver()).scrollToElement(element).perform();
-        getJavaScriptExecutor().executeScript(
-                "arguments[0].scrollIntoViewIfNeeded(); ",
-                element
-        );
+        if (((RemoteWebDriver) getDriver()).getCapabilities()
+                .getBrowserName().equalsIgnoreCase("firefox")
+        ) {
+            getJavaScriptExecutor().executeScript(
+                    "arguments[0].scrollIntoViewIfNeeded(); ",
+                    element
+            );
+            return;
+        }
+        new Actions(getDriver()).scrollToElement(element).perform();
     }
 
     private void scrollIntoElementViewWithoutAnimation(WebElement element) {
