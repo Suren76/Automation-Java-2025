@@ -1,7 +1,7 @@
 package am.staff.pages;
 
 import am.staff.components.resultPageComponents.*;
-import am.staff.utils.Logger;
+import am.staff.utils.Log;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 
@@ -62,7 +62,7 @@ public abstract class ResultPage<T extends ResultItemBlock> extends BasePage {
     }
 
     public List<T> getResultItemBlockList() {
-//        getMiddleWait().waitElementPresence(xpathToResultItems);
+        // wait to elements be loaded: most stable solution
         sleep(2000);
         return getDriver().findElements(xpathToResultItems).stream()
                 .map(element -> {

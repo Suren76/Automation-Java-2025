@@ -5,6 +5,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import static am.staff.utils.Log.info;
+
 public class Header extends BaseComponent {
     private static String templateXpathToNavbarItem = "//nav//a[.//*[text()='%s']]";
     private static String templateXpathToNavbarDropdownItem = "//nav//*[./*[text()='%s']]/following-sibling::div[.//a]/..";
@@ -60,25 +62,15 @@ public class Header extends BaseComponent {
         return isElementExists(xpathToNavbarCompaniesField);
     }
 
-    public void clickMenuHoverDropdownOption(String dropdownName, String dropdownOption) {
-        By xpathToNavbarDropdownItem = By.xpath(templateXpathToNavbarDropdownItem.formatted(dropdownName));
-        By xpathToHoverDropdownOption = By.xpath(".//a[.//text()='%s']".formatted(dropdownOption));
-
-        WebElement dropdownElement = find(xpathToNavbarDropdownItem);
-
-        actions
-                .moveToElement(dropdownElement)
-                .moveToElement(dropdownElement.findElement(xpathToHoverDropdownOption))
-                .perform();
-        ;
+    protected void clickMenuHoverDropdownOption(String dropdownName, String dropdownOption) {
+        new HoverDropdownComponent(dropdownName).clickMenuHoverDropdownOption(dropdownOption);
     }
 
     public void clickEmployerDropdownOption(String dropdownOption) {
-        clickMenuHoverDropdownOption("Employer", "");
+        clickMenuHoverDropdownOption("Employer", dropdownOption);
     }
+
     public void clickCandidateDropdownOption(String dropdownOption) {
-        clickMenuHoverDropdownOption("Candidate", "");
+        clickMenuHoverDropdownOption("Candidate", dropdownOption);
     }
-
-
 }

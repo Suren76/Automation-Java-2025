@@ -3,8 +3,11 @@ package BaseTestComponents;
 import am.staff.helper.WebDriverHelper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
+import utils.JunitScreenshotOnExceptionHandler;
 
+@ExtendWith(JunitScreenshotOnExceptionHandler.class)
 public class BaseTestWithDriverInitClose {
     public WebDriver driver;
 

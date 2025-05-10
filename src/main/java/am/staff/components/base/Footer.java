@@ -1,14 +1,14 @@
 package am.staff.components.base;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+
+import static am.staff.utils.Log.info;
 
 
 public class Footer extends BaseComponent {
     private static String xpathToFooterBlock = "//noscript/following-sibling::div/div[.//*[contains(., 'All Rights Reserved.')]]";
-    private static String templateXpathToFooterMenuItem = xpathToFooterBlock +
-            "//*[text()='%s']/following-sibling::*//*[text()='%s']";
+    private static String templateXpathToFooterMenuItem = xpathToFooterBlock + "//*[text()='%s']/following-sibling::*//*[text()='%s']";
 
     public static By xpathToFooter = By.xpath(xpathToFooterBlock);
 
@@ -29,6 +29,7 @@ public class Footer extends BaseComponent {
     }
 
     private void clickFooterMenuItem(String menuTitle, String menuItemName) {
+        info("select '%s' on '%s' menu".formatted(menuItemName, menuTitle));
         By xpathToFooterMenuItem = By.xpath(templateXpathToFooterMenuItem.formatted(menuTitle, menuItemName));
         scrollTo(xpathToFooterMenuItem);
         clickElement(xpathToFooterMenuItem);
